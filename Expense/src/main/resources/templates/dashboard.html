@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4"
+	layout:decorate="~{decorator}">
+<head>
+</head>
+<body>
+	<!-- /.row -->
+	<div layout:fragment="page_content" id="page_content">
+		<!-- Content Header (Page header) -->
+		<section class="content-header">
+			<h1>
+				Customers <small>count</small>
+			</h1>
+		</section>
+
+		<!-- Main content -->
+		<section class="content">
+			<!-- Info boxes -->
+			<div class="row">
+				<div class="col-md-3 col-sm-6 col-xs-12">
+					<div class="info-box">
+						<span class="info-box-icon bg-aqua"><i
+							class="ion ion-ios-people-outline"></i></span>
+
+						<div class="info-box-content">
+							<span class="info-box-text">TOTAL</span> <span
+								class="info-box-number" th:text="${total}"></span>
+						</div>
+						<!-- /.info-box-content -->
+					</div>
+					<!-- /.info-box -->
+				</div>
+				<!-- /.col -->
+				<div class="col-md-3 col-sm-6 col-xs-12">
+					<div class="info-box">
+						<span class="info-box-icon bg-red"><i
+							class="ion ion-ios-people-outline"></i></span>
+
+						<div class="info-box-content">
+							<span class="info-box-text">LEFT</span> <span
+								class="info-box-number" th:text="${left}"></span>
+						</div>
+						<!-- /.info-box-content -->
+					</div>
+					<!-- /.info-box -->
+				</div>
+				<!-- /.col -->
+
+				<!-- fix for small devices only -->
+				<div class="clearfix visible-sm-block"></div>
+
+				<div class="col-md-3 col-sm-6 col-xs-12">
+					<div class="info-box">
+						<span class="info-box-icon bg-green"><i
+							class="ion ion-ios-people-outline"></i></span>
+
+						<div class="info-box-content">
+							<span class="info-box-text">CURRENT</span> <span
+								class="info-box-number" th:text="${current}"></span>
+						</div>
+						<!-- /.info-box-content -->
+					</div>
+					<!-- /.info-box -->
+				</div>
+				<!-- /.col -->
+				<div class="col-md-3 col-sm-6 col-xs-12">
+					<div class="info-box">
+						<span class="info-box-icon bg-yellow"><i
+							class="ion ion-ios-people-outline"></i></span>
+
+						<div class="info-box-content">
+							<span class="info-box-text">CANCELLED</span> <span
+								class="info-box-number" th:text="${cancelled}"></span>
+						</div>
+						<!-- /.info-box-content -->
+					</div>
+					<!-- /.info-box -->
+				</div>
+				<!-- /.col -->
+			</div>
+		</section>
+	</div>
+
+	<th:block layout:fragment="scripts">
+	</th:block>
+</body>
+</html>
