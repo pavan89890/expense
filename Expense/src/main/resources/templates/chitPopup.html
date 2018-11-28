@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+</head>
+<body>
+	<!-- /.row -->
+	<div th:fragment="userPopup" id="page_content">
+		<form role="form" action="/expense/admin/saveChit" method="post"
+			id="chitFormId">
+			<input type="hidden" name="id" th:value="${chit.id}">
+			<div class="box-body">
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="name">Month</label> <select class="form-control"
+								name="month" id="month"><option value="">Select
+									Month</option>
+								<option value="January" th:selected="(${chit.month=='January'})">January</option>
+								<option value="February"
+									th:selected="(${chit.month=='February'})">February</option>
+								<option value="March" th:selected="(${chit.month=='March'})">March</option>
+								<option value="April" th:selected="(${chit.month=='April'})">April</option>
+								<option value="May" th:selected="(${chit.month=='May'})">May</option>
+								<option value="June" th:selected="(${chit.month=='June'})">June</option>
+								<option value="July" th:selected="(${chit.month=='July'})">July</option>
+								<option value="August" th:selected="(${chit.month=='August'})">August</option>
+								<option value="September"
+									th:selected="(${chit.month=='September'})">September</option>
+								<option value="October" th:selected="(${chit.month=='October'})">October</option>
+								<option value="November"
+									th:selected="(${chit.month=='November'})">November</option>
+								<option value="December"
+									th:selected="(${chit.month=='December'})">December</option>
+							</select>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="year">Year</label> <input class="form-control number"
+								th:value="${chit.year}" id="year" name="year"
+								placeholder="Enter Year" type="text">
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="actualAmount">Actual Amount</label> <input
+								class="form-control number" th:value="${chit.actualAmount}"
+								id="actualAmount" name="actualAmount"
+								placeholder="Enter Actual Amount" type="text">
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="paidAmount">Paid Amount</label> <input
+								class="form-control number" th:value="${chit.paidAmount}"
+								id="paidAmount" name="paidAmount"
+								placeholder="Enter Paid Amount" type="text">
+						</div>
+					</div>
+
+				</div>
+				<div class="row">
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="profit">Profit</label> <input type="text"
+								name="profit" id="profit" class="form-control number"
+								th:value="${chit.profit}" placeholder="Profit"
+								disabled="disabled" />
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /.box-body -->
+		</form>
+	</div>
+	<th:block layout:fragment="scripts">
+		<!-- bootstrap datepicker -->
+		<script type="text/javascript">
+			$(".number").on('keyup mouseleave', function() {
+				if (isNaN($(this).val().trim())) {
+					$(this).val('');
+					alert("Please Enter Numbers Only");
+					$(this).focus();
+				}
+			});
+		</script>
+	</th:block>
+</body>
+</html>
