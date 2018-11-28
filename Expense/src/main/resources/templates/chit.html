@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{decorator}">
+
+<head>
+<!-- DataTables -->
+<link rel="stylesheet"
+	th:href="@{/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css}">
+<link
+	th:href="@{/bower_components/datatables.net-bs/css/buttons.dataTables.min.css}"
+	rel="stylesheet">
+</head>
+
+<body>
+	<!-- /.row -->
+	<div layout:fragment="page_content" id="page_content">
+		<section class="content-header">
+			<h1>
+				Chits <small>(add,update,delete)</small>
+			</h1>
+		</section>
+
+		<!-- Main content -->
+		<section class="content container-fluid">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="box box-success">
+						<div class="box-header with-border">
+							Chits <span th:text="${(chits!=null?chits.size():0)+' / 30'}"
+								class="badge"></span> A <span th:text="${totalActual}"
+								class="badge"></span> P <span th:text="${totalPaid}"
+								class="badge"></span>
+							<button class="btn btn-success btn-xs pull-right" id="addBtnId"
+								data-toggle="modal" data-target="#chitPopupId"
+								onclick="updateRecord(0);">Add</button>
+						</div>
+						<div class="box-body">
+							<div class="table-responsive">
+								<table id="chitTable" class="table table-bordered table-striped">
+									<thead>
+										<tr>
+											<th>S.No</th>
+											<th>Month</th>
+											<th>Year</th>
+											<th>Actual</th>
+											<th>Paid</th>
+											<th>Profit</th>
+											<th></th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:each="chit,status:${chits}">
+											<td th:text="${status.index+1}"></td>
+											<td th:text="${chit.month}"></td>
+											<td th:text="${chit.year}"></td>
+											<td th:text="${chit.actualAmount}"></td>
+											<td th:text="${chit.paidAmount}"></td>
+											<td th:text="${chit.profit}"></td>
+											<td style="white-space: nowrap;">
+												<button class="btn btn-info btn-xs" title="Update"
+													th:onclick="${'javascript:updateRecord('+chit.id+')'}">
+													<i class="fa fa-edit"></i>
+												</button>
+												<button title="Delete"
+													th:onclick="${'javascript:deleteRecord('+chit.id+')'}"
+													class="btn btn-danger btn-xs">
+													<i class="fa fa-trash"></i>
+												</button>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<div class="modal fade" id="chitPopupId">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+						<h4 class="modal-title">Chit</h4>
+					</div>
+					<div class="modal-body" id="chitPopupBodyId"></div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default pull-left"
+							data-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-success" onclick="saveChit()">Save</button>
+					</div>
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
+	</div>
+
+	<th:block layout:fragment="scripts">
+		<!-- DataTables -->
+		<script
+			th:src="@{/bower_components/datatables.net/js/jquery.dataTables.min.js}"></script>
+		<script
+			th:src="@{/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js}"></script>
+
+		<script
+			src="https://cdn.datatables.net/buttons/1.5.2/js/dataTables.buttons.min.js"></script>
+		<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+		<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+		<script
+			src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+		<script
+			src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.html5.min.js"></script>
+		<script type="text/javascript">
+			function saveChit() {
+				if ($("#month").val().trim() == "") {
+					alert("Please Select Month");
+					$("#month").focus();
+					return false;
+				} else if ($("#year").val().trim() == "") {
+					alert("Please Enter Year");
+					$("#year").focus();
+					return false;
+				} else if ($("#actualAmount").val().trim() == "") {
+					alert("Please Enter Actual Amount");
+					$("#actualAmount").focus();
+					return false;
+				} else if (isNaN($("#actualAmount").val().trim())) {
+					alert("Please Enter Correct Actual Amount");
+					$("#actualAmount").focus();
+					return false;
+				} else if ($("#paidAmount").val().trim() == "") {
+					alert("Please Enter Paid Amount");
+					$("#paidAmount").focus();
+					return false;
+				} else if (isNaN($("#paidAmount").val().trim())) {
+					alert("Please Enter Correct Paid Amount");
+					$("#paidAmount").focus();
+					return false;
+				} else if ($("#actualAmount").val() < $("#paidAmount").val()) {
+					alert("Please Enter Paid Amount Less Than Actual Amount");
+					$("#actualAmount").focus();
+					return false;
+				} else {
+					$.ajax({
+						url : $("#chitFormId").attr("action"),
+						type : 'post',
+						data : $("#chitFormId").serialize(),
+						success : function(data) {
+							if (data.split("-")[0] == "SUCCESS") {
+								alert(data.split("-")[1]);
+								$("#chitFormId")[0].reset();
+								window.location.reload();
+							} else {
+								alert(data.split("-")[1], "error");
+							}
+
+						},
+						error : function() {
+							alert("Unable to load details.");
+						}
+					});
+					return true;
+				}
+			}
+
+			$(document).ready(function() {
+				$('#chitTable').DataTable({});
+			});
+
+			function updateRecord(id) {
+				$.ajax({
+					url : '/expense/admin/updateChit?u=' + id,
+					type : 'get',
+					success : function(data) {
+						$("#chitPopupBodyId").html(data);
+						$("#chitPopupId").modal(true);
+					},
+					error : function() {
+						alert("Unable to load details.");
+					}
+				});
+			}
+
+			function deleteRecord(id) {
+				if (confirm("Are you sure you want to delete?")) {
+					window.location = "/expense/admin/deleteChit?u=" + id;
+				}
+			}
+		</script>
+	</th:block>
+</body>
+
+</html>
